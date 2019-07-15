@@ -2,7 +2,14 @@ const Sequelize = require("sequelize");
 const sequelize = require("../database/database");
 const bcrypt = require('bcryptjs');
 const Model = Sequelize.Model;
+<<<<<<< HEAD
 const crypto = require('crypto');
+=======
+//
+class Usuario extends Model{}
+
+Usuario.beforeCreate((usuario) => {
+>>>>>>> d1e19ce71ec19fcd560b7a61950b111150c50979
 
 
 class Usuario extends Model{}
@@ -51,6 +58,7 @@ module.exports =  Usuario.init(
       len: [11, 11]
     }
   }
+<<<<<<< HEAD
   /*salt: {
     type: Sequelize.STRING,
     get() {
@@ -72,3 +80,22 @@ Usuario.beforeCreate(async usuario => {
         throw new Error();
       }
 });
+=======
+}, 
+{
+    sequelize, 
+    modelName : "usuario",
+    freezeTableName:true,
+    classMethods :{
+      generateHash: (senha) =>{
+        return bcrypt.hashSync(senha, bcrypt.genSaltSync(10), null)
+      }
+    },
+    instanceMethods: {
+        verifyPassword: (password, databasePassword) => {
+          return bcrypt.compareSync(password, databasePassword)
+        }
+      }
+}
+);
+>>>>>>> d1e19ce71ec19fcd560b7a61950b111150c50979
