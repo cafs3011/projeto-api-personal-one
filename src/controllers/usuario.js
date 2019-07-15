@@ -1,6 +1,8 @@
 const Usuario = require("../models/usuario");
 const status = require("http-status");
-
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const authConfig = require('../config/auth');
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
@@ -36,13 +38,26 @@ exports.buscarTodos = (request, response, next) => {
     .catch(error => next(error));
 };
 
-exports.criar = (request, response, next) => {
+exports.criar = async(request, response, next) => {
+  try{
+  const usuario = await Usuario.create(request.body);
   
-  Usuario.create(request.body)
-    .then(() => {
-      response.status(status.CREATED).send();
-    })
-    .catch(error => next(error));
+  
+      if(!usuario){
+        response.status(status.INTERNAL_SERVER_ERROR);
+      }
+      else{
+      
+          usuario.senha = undefined;
+            response.status(status.CREATED).send({
+              usuario,
+              token:generateToken({id:usuario.id})
+            });
+      }
+      }
+  catch(error){
+    next(error);
+  }
 };
 
 exports.atualizar = (request, response, next) => {
@@ -85,4 +100,37 @@ exports.excluir = (request, response, next) => {
       }
     })
     .catch(error => next(error));
+};
+
+
+exports.autenticacao = async(request, response) => {
+  const {email, senha} = request.body;
+
+
+  //const usuario = await Usuario.findOne({where:{ email:emailSolicitado }});
+
+  const usuario = await Usuario.findOne({email });
+  
+    if(!usuario)
+    {
+      return response.status(status.NOT_FOUND).send();
+    }
+    else if(!bcrypt.compareSync(senha,usuario.senha)) {
+      return response.status(status.UNAUTHORIZED).send();
+    }
+    usuario.senha = undefined;
+    
+
+    response.send({
+      usuario, token:
+      generateToken({id:usuario.id})
+
+    });
+  };
+
+function generateToken(params={}){
+return jwt.sign(params,authConfig.secret,
+  {
+    expiresIn:86400
+  });
 };

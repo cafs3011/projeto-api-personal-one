@@ -29,7 +29,12 @@ const Aluno = sequelize.define("aluno", {
     validate: {
       len: [2, 255]
     }
-  }
-});
+  }},
+  {
+    sequelize, 
+    modelName : "usuario",
+    freezeTableName : true
+}
+);
 
 module.exports = Aluno;
