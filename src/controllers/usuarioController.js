@@ -1,9 +1,10 @@
-const Usuario = require("../models/usuario");
+const Usuario = require("../models/usuarioModel");
 const status = require("http-status");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth');
+const authConfig = require('../config/autorizacao');
 const express = require('express');
+
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
@@ -20,24 +21,28 @@ exports.buscarUm = (request, response, next) => {
     .catch(error => next(error));
 };
 
-exports.buscarTodos = (request, response, next) => {
-  let limite = parseInt(request.query.limite || 0);
-  let pagina = parseInt(request.query.pagina || 0);
+exports.buscarTodos = async (request, response, next) => {
+  try{
 
-  if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
-    response.status(status.BAD_REQUEST).send();
-  }
+      let limite = parseInt(request.query.limite || 0);
+      let pagina = parseInt(request.query.pagina || 0);
 
-  const ITENS_POR_PAGINA = 10;
+      if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
+        response.status(status.BAD_REQUEST).send();
+      }
 
-  limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
-  pagina = pagina <= 0 ? 0 : pagina * limite;
+      const ITENS_POR_PAGINA = 10;
 
-  Usuario.findAll({ limit: limite, offset: pagina })
-    .then(usuarios => {
+      limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
+      pagina = pagina <= 0 ? 0 : pagina * limite;
+
+      const usuarios = await Usuario.findAll({limit: limite, offset: pagina });
+
       response.send(usuarios);
-    })
-    .catch(error => next(error));
+  }
+  catch(error) {
+       next(error);
+      };
 };
 
 exports.criar = async(request, response, next) => {

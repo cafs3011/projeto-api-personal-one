@@ -1,6 +1,6 @@
 const status = require("http-status");
 const jwt = require("jsonwebtoken");
-const authConfig = require("../config/auth");
+const authConfig = require("../config/autorizacao");
 
 module.exports = (request, response, next) =>{
 

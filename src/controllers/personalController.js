@@ -1,18 +1,17 @@
-const Treino = require("../models/treino");
+const Personal = require("../models/personalModel");
 const status = require("http-status");
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
-  Treino.findByPk(id)
-    .then(treino => {
-      if (treino) {
-        response.status(status.OK).send(treino);
+  Personal.findByPk(id)
+    .then(personal => {
+      if (personal) {
+        response.status(status.OK).send(personal);
       } else {
         response.status(status.NOT_FOUND).send();
       }
     })
-
     //
     .catch(error => next(error));
 };
@@ -30,9 +29,9 @@ exports.buscarTodos = (request, response, next) => {
   limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
   pagina = pagina <= 0 ? 0 : pagina * limite;
 
-  Treino.findAll({ limit: limite, offset: pagina })
-    .then(treinos => {
-      response.send(treinos);
+  Personal.findAll({ limit: limite, offset: pagina })
+    .then(personals => {
+      response.send(personals);
     })
     .catch(error => next(error));
 };
@@ -42,7 +41,7 @@ exports.criar = (request, response, next) => {
   const espoliador = request.body.espoliador;
   const descricao = request.body.descricao;
 
-  Treino.create({
+  Personal.create({
     titulo: titulo,
     espoliador: espoliador,
     descricao: descricao
@@ -60,10 +59,10 @@ exports.atualizar = (request, response, next) => {
   const espoliador = request.body.espoliador;
   const descricao = request.body.descricao;
 
-  Treino.findByPk(id)
-    .then(treino => {
-      if (treino) {
-        Treino.update(
+  Personal.findByPk(id)
+    .then(personal => {
+      if (personal) {
+        Personal.update(
           {
             titulo: titulo,
             espoliador: espoliador,
@@ -85,10 +84,10 @@ exports.atualizar = (request, response, next) => {
 exports.excluir = (request, response, next) => {
   const id = request.params.id;
 
-  Treino.findByPk(id)
-    .then(treino => {
-      if (treino) {
-        Treino.destroy({
+  Personal.findByPk(id)
+    .then(personal => {
+      if (personal) {
+        Personal.destroy({
           where: { id: id }
         })
           .then(() => {

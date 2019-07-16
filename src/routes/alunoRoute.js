@@ -1,9 +1,9 @@
 const express = require("express");
-const controller = require("../controllers/aluno");
+const controller = require("../controllers/alunoController");
 const router = express.Router();
-const authMiddleware = require('../middlewares/auth');
+const authMiddleware = require('../middlewares/autorizacaoMiddleware');
 //
-router.use(authMiddleware);
+//router.use(authMiddleware);
 
 router.get("/teste", (req, res, next) => { res.send({ok:"ok"})});
 router.get("/alunos/:id", controller.buscarUm);

@@ -1,22 +1,23 @@
-const Aluno = require("../models/aluno");
+const Treino = require("../models/treinoModel");
 const status = require("http-status");
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
-  Aluno.findByPk(id)
-    .then(aluno => {
-      if (aluno) {
-        response.status(status.OK).send(aluno);
+  Treino.findByPk(id)
+    .then(treino => {
+      if (treino) {
+        response.status(status.OK).send(treino);
       } else {
         response.status(status.NOT_FOUND).send();
       }
     })
+
     //
     .catch(error => next(error));
 };
 
-exports.buscarTodos =  (request, response, next) => {
+exports.buscarTodos = (request, response, next) => {
   let limite = parseInt(request.query.limite || 0);
   let pagina = parseInt(request.query.pagina || 0);
 
@@ -29,16 +30,23 @@ exports.buscarTodos =  (request, response, next) => {
   limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
   pagina = pagina <= 0 ? 0 : pagina * limite;
 
-  Aluno.findAll({ limit: limite, offset: pagina })
-    .then(alunos => {
-      response.send(alunos);
+  Treino.findAll({ limit: limite, offset: pagina })
+    .then(treinos => {
+      response.send(treinos);
     })
     .catch(error => next(error));
 };
 
 exports.criar = (request, response, next) => {
+  const titulo = request.body.titulo;
+  const espoliador = request.body.espoliador;
+  const descricao = request.body.descricao;
 
-  Aluno.create(request.body)
+  Treino.create({
+    titulo: titulo,
+    espoliador: espoliador,
+    descricao: descricao
+  })
     .then(() => {
       response.status(status.CREATED).send();
     })
@@ -48,11 +56,19 @@ exports.criar = (request, response, next) => {
 exports.atualizar = (request, response, next) => {
   const id = request.params.id;
 
-  Aluno.findByPk(id)
-    .then(aluno => {
-      if (aluno) {
-        Aluno.update(
-          request.body,
+  const titulo = request.body.titulo;
+  const espoliador = request.body.espoliador;
+  const descricao = request.body.descricao;
+
+  Treino.findByPk(id)
+    .then(treino => {
+      if (treino) {
+        Treino.update(
+          {
+            titulo: titulo,
+            espoliador: espoliador,
+            descricao: descricao
+          },
           { where: { id: id } }
         )
           .then(() => {
@@ -69,10 +85,10 @@ exports.atualizar = (request, response, next) => {
 exports.excluir = (request, response, next) => {
   const id = request.params.id;
 
-  Aluno.findByPk(id)
-    .then(aluno => {
-      if (aluno) {
-        Aluno.destroy({
+  Treino.findByPk(id)
+    .then(treino => {
+      if (treino) {
+        Treino.destroy({
           where: { id: id }
         })
           .then(() => {

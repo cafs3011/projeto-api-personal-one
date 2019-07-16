@@ -1,13 +1,15 @@
-const Personal = require("../models/personal");
+const AlunoModel = require("../models/alunoModel");
+const UsuarioModel = require("../models/usuarioModel");
 const status = require("http-status");
+const UsuarioModelView = require('../modelView/alunoModelView');
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
-  Personal.findByPk(id)
-    .then(personal => {
-      if (personal) {
-        response.status(status.OK).send(personal);
+  AlunoModel.findByPk(id)
+    .then(aluno => {
+      if (aluno) {
+        response.status(status.OK).send(aluno);
       } else {
         response.status(status.NOT_FOUND).send();
       }
@@ -16,7 +18,8 @@ exports.buscarUm = (request, response, next) => {
     .catch(error => next(error));
 };
 
-exports.buscarTodos = (request, response, next) => {
+exports.buscarTodos =  async (request, response, next) => {
+  try{
   let limite = parseInt(request.query.limite || 0);
   let pagina = parseInt(request.query.pagina || 0);
 
@@ -29,23 +32,26 @@ exports.buscarTodos = (request, response, next) => {
   limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
   pagina = pagina <= 0 ? 0 : pagina * limite;
 
-  Personal.findAll({ limit: limite, offset: pagina })
-    .then(personals => {
-      response.send(personals);
-    })
-    .catch(error => next(error));
+  alunos = await AlunoModel.findAll({ limit: limite, offset: pagina });
+  
+  var list = [];
+  for(let aluno of alunos){
+    const usuario =  await UsuarioModel.findByPk(aluno.usuario_id);
+    if(usuario){
+      const usuarioModelView = new UsuarioModelView(usuario, aluno);
+      list.push(usuarioModelView);
+    }
+  }  
+  response.send({"alunos":list});
+}
+    catch(error){
+      next(error);
+    }
 };
 
 exports.criar = (request, response, next) => {
-  const titulo = request.body.titulo;
-  const espoliador = request.body.espoliador;
-  const descricao = request.body.descricao;
 
-  Personal.create({
-    titulo: titulo,
-    espoliador: espoliador,
-    descricao: descricao
-  })
+  AlunoModel.create(request.body)
     .then(() => {
       response.status(status.CREATED).send();
     })
@@ -55,19 +61,11 @@ exports.criar = (request, response, next) => {
 exports.atualizar = (request, response, next) => {
   const id = request.params.id;
 
-  const titulo = request.body.titulo;
-  const espoliador = request.body.espoliador;
-  const descricao = request.body.descricao;
-
-  Personal.findByPk(id)
-    .then(personal => {
-      if (personal) {
-        Personal.update(
-          {
-            titulo: titulo,
-            espoliador: espoliador,
-            descricao: descricao
-          },
+  AlunoModel.findByPk(id)
+    .then(aluno => {
+      if (aluno) {
+        AlunoModel.update(
+          request.body,
           { where: { id: id } }
         )
           .then(() => {
@@ -84,10 +82,10 @@ exports.atualizar = (request, response, next) => {
 exports.excluir = (request, response, next) => {
   const id = request.params.id;
 
-  Personal.findByPk(id)
-    .then(personal => {
-      if (personal) {
-        Personal.destroy({
+  AlunoModel.findByPk(id)
+    .then(aluno => {
+      if (aluno) {
+        AlunoModel.destroy({
           where: { id: id }
         })
           .then(() => {
