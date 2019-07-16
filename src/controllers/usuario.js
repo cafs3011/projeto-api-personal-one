@@ -3,6 +3,8 @@ const status = require("http-status");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth');
+const express = require('express');
+
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
