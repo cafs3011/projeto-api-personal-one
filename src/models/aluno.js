@@ -1,40 +1,53 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/database");
+const usuario = require('./usuario');
+const Model = Sequelize.Model;
 
-const Aluno = sequelize.define("aluno", {
+class Aluno extends Model{
+}
+module.exports =  Aluno.init(
+  {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: Sequelize.INTEGER
   },
-  titulo: {
+  dataNascimento: {
     allowNull: false,
-    type: Sequelize.STRING(255),
+    type: Sequelize.DATE,
     validate: {
       len: [2, 255]
     }
   },
-  //
-  espoliador: {
+  peso: {
     allowNull: false,
-    type: Sequelize.STRING(40),
+    type: Sequelize.DECIMAL(6,2),
     validate: {
       len: [2, 40]
     }
   },
-  descricao: {
+  altura: {
     allowNull: false,
-    type: Sequelize.STRING(255),
-    validate: {
-      len: [2, 255]
+    type: Sequelize.DECIMAL(6,2),
+  },
+  usuario_id : {
+    type: Sequelize.INTEGER,
+    unique:true,
+    references: {
+      // This is a reference to another model
+      model: usuario,
+      // This is the column name of the referenced model
+      key: 'id',
+      // This declares when to check the foreign key constraint. PostgreSQL only.
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
-  }},
+  },
+},
   {
     sequelize, 
-    modelName : "usuario",
+    modelName : "aluno",
     freezeTableName : true
 }
 );
 
-module.exports = Aluno;
