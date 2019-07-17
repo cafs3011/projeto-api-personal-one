@@ -15,21 +15,45 @@ module.exports =  Aluno.init(
   },
   dataNascimento: {
     allowNull: false,
-    type: Sequelize.DATE,
+    require:true,
+    type: Sequelize.DATEONLY,
     validate: {
-      len: [2, 255]
+      isDate:true
     }
   },
   peso: {
     allowNull: false,
+    require:true,
     type: Sequelize.DECIMAL(6,2),
     validate: {
-      len: [2, 40]
+      isDecimal:true
     }
   },
   altura: {
     allowNull: false,
+    require:true,
     type: Sequelize.DECIMAL(6,2),
+    validate:{
+      isDecimal:true
+    }
+  },
+  telefone:{
+    allowNull: false,
+    require:true,
+    type: Sequelize.INTEGER,
+    validate:{
+      isNumeric:true
+    }
+  },
+  restricao:{
+    allowNull:false,
+    type:Sequelize.TEXT,
+    defaultValue:""
+  },
+  observacao:{
+    allowNull:false,
+    type: Sequelize.TEXT,
+    defaultValue:""
   },
   usuario_id : {
     type: Sequelize.INTEGER,

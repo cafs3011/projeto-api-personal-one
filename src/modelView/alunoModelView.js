@@ -14,5 +14,8 @@ module.exports = class alunoModelView
         this.altura = alunoModel.altura;
         this.peso = alunoModel.peso;
         this.email = usuarioModel.email;
+        this.restricao = alunoModel.restricao;
+        this.observacao = alunoModel.observacao;
+        this.telefone = alunoModel.telefone;
     }
 }
