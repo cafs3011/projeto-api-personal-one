@@ -1,9 +1,10 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/database");
 const Model = Sequelize.Model;
+const Aquecimento = require("./aquecimentoModel");
 
-class Exercicio extends Model{}
-module.exports =  Exercicio.init(
+class Ficha extends Model{}
+module.exports =  Ficha.init(
 {
   id: {
     allowNull: false,
@@ -27,19 +28,25 @@ module.exports =  Exercicio.init(
     validate: {
       len: [1, 100]
     }
+  },
+  descansoPadrao:{
+    allowNull:false,
+    require:true,
+    type:Sequelize.INTEGER,
+    validate:{
+        len:[1,3]
+    }
+  },
+  orientacao:{
+      allowNull:false,
+      type: Sequelize.TEXT
   }
 },
   {
     sequelize, 
-    modelName : "exercicio",
+    modelName : "ficha",
     freezeTableName:true
 
 });
 
-/*Exercicio.associate = (models) => {
-  Exercicio.belongsToMany(models.Ficha,{
-    through: 'Aquecimento',
-    as: 'aquecimentos', 
-    foreignKey: 'exercicioId'
-  });
-};*/
+Ficha.hasMany(Aquecimento);

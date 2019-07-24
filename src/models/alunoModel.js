@@ -40,20 +40,15 @@ module.exports =  Aluno.init(
   telefone:{
     allowNull: false,
     require:true,
-    type: Sequelize.INTEGER,
-    validate:{
-      isNumeric:true
-    }
+    type: Sequelize.INTEGER
   },
   restricao:{
     allowNull:false,
-    type:Sequelize.TEXT,
-    defaultValue:""
+    type:Sequelize.TEXT
   },
   observacao:{
     allowNull:false,
-    type: Sequelize.TEXT,
-    defaultValue:""
+    type: Sequelize.TEXT
   },
   usuario_id : {
     type: Sequelize.INTEGER,

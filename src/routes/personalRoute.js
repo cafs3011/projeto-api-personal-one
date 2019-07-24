@@ -1,5 +1,5 @@
 const express = require("express");
-const controller = require("../controllers/personal");
+const controller = require("../controllers/personalController");
 const router = express.Router();
 //
 router.get("/personals/:id", controller.buscarUm);

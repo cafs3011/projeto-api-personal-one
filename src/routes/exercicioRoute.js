@@ -1,7 +1,10 @@
 const express = require("express");
 const controller = require("../controllers/exercicioController");
 const router = express.Router();
-//
+const authMiddleware = require('../middlewares/autorizacaoMiddleware');
+
+router.use(authMiddleware);
+
 router.get("/exercicios/:id", controller.buscarUm);
 router.get("/exercicios", controller.buscarTodos);
 router.post("/exercicios", controller.criar);

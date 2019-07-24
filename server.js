@@ -7,6 +7,8 @@ const status = require("http-status");
 const alunosRoute = require("./src/routes/alunoRoute");
 const usuariosRoute = require("./src/routes/usuarioRoute");
 const exerciciosRoute = require("./src/routes/exercicioRoute");
+const fichasRoute = require("./src/routes/fichaRoute");
+const personalRoute = require("./src/routes/personalRoute");
 
 const sequelize = require("./src/database/database");
 const bodyParser = require("body-parser");
@@ -20,8 +22,10 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.json());
 
 app.use("/api", usuariosRoute);
+app.use("/api",personalRoute);
 app.use("/api", alunosRoute);
 app.use("/api",exerciciosRoute);
+app.use("/api",fichasRoute);
 
 app.use((request, response, next) => {
   response.status(status.NOT_FOUND).send();
@@ -31,7 +35,23 @@ app.use((error, request, response, next) => {
   response.status(status.INTERNAL_SERVER_ERROR).json({ error});
 });
 
-sequelize.sync({ force: false }).then(() => {
+var order = ['exercicioModel.js', 'usuarioModel.js', 'fichaModel.js','alunoModel.js',
+  'aquecimentoModel.js','personalModel.js'];
+
+order.forEach(entidade => {
+  var model = require("./src/models/"+entidade);
+  model.sync({force:false});
+  
+});
+const port = process.env.PORT || 3001;
+
+  app.set("port", port);
+
+  const server = http.createServer(app);
+
+  server.listen(port);
+  
+/*sequelize.sync({ force: true }).then(() => {
   const port = process.env.PORT || 3001;
 
   app.set("port", port);
@@ -39,4 +59,4 @@ sequelize.sync({ force: false }).then(() => {
   const server = http.createServer(app);
 
   server.listen(port);
-});
+});*/

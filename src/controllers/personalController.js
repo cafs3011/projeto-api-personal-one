@@ -1,11 +1,13 @@
 const Personal = require("../models/personalModel");
 const status = require("http-status");
+const personalRepository = require("../repository/personalRepository");
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
-  Personal.findByPk(id)
+  personalRepository.buscarUm(id, "personalModel")
     .then(personal => {
+      
       if (personal) {
         response.status(status.OK).send(personal);
       } else {
@@ -29,27 +31,20 @@ exports.buscarTodos = (request, response, next) => {
   limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
   pagina = pagina <= 0 ? 0 : pagina * limite;
 
-  Personal.findAll({ limit: limite, offset: pagina })
-    .then(personals => {
-      response.send(personals);
-    })
-    .catch(error => next(error));
-};
+  personalRepository.buscarTodos(limite,pagina,"personalModel")
+        .then(personais => {
+          if(personais)
+            response.status(status.OK).send(personais);    
+          else
+            response.status(status.NOT_FOUND).send();
+  })};
 
-exports.criar = (request, response, next) => {
-  const titulo = request.body.titulo;
-  const espoliador = request.body.espoliador;
-  const descricao = request.body.descricao;
-
-  Personal.create({
-    titulo: titulo,
-    espoliador: espoliador,
-    descricao: descricao
-  })
-    .then(() => {
-      response.status(status.CREATED).send();
-    })
-    .catch(error => next(error));
+  exports.criar = (request, response, next) => {
+    personalRepository.criar(request.body,"personalModel")
+    .then(entidadeCriada => {
+      //response.status(status.CREATED).send({entidadeCriada, token:generateToken({id:entidadeCriada.usuario_id})});
+      response.status(status.CREATED).send(entidadeCriada);
+    }).catch(error => next(error));
 };
 
 exports.atualizar = (request, response, next) => {
@@ -59,7 +54,7 @@ exports.atualizar = (request, response, next) => {
   const espoliador = request.body.espoliador;
   const descricao = request.body.descricao;
 
-  Personal.findByPk(id)
+  PersonalModel.findByPk(id)
     .then(personal => {
       if (personal) {
         Personal.update(
@@ -84,19 +79,12 @@ exports.atualizar = (request, response, next) => {
 exports.excluir = (request, response, next) => {
   const id = request.params.id;
 
-  Personal.findByPk(id)
-    .then(personal => {
-      if (personal) {
-        Personal.destroy({
-          where: { id: id }
-        })
-          .then(() => {
-            response.status(status.OK).send();
-          })
-          .catch(error => next(error));
-      } else {
-        response.status(status.NOT_FOUND).send();
-      }
-    })
-    .catch(error => next(error));
-};
+  baseRepository.excluir(id,"personalModel")
+      .then(fichaExcluida => {
+        if(fichaExcluida)
+          response.status(status.OK).send();
+        else
+          response.status(status.NOT_FOUND).send();
+      })
+      .catch(error => next(error));
+  };
