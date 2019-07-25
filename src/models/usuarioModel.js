@@ -66,3 +66,7 @@ Usuario.beforeCreate(async usuario => {
         throw new Error();
       }
 });
+
+Usuario.beforeUpdate(async usuario => {
+  usuario.senha = bcrypt.hashSync(usuario.senha, 10);
+});

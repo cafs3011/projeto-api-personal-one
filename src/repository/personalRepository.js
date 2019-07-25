@@ -44,3 +44,16 @@ exports.buscarTodos = async (limite,pagina, model) => {
     }*/
         return entidades;
 };
+
+exports.atualizar = async(id,body ,model) => {
+  const Entidade = require("../models/"+model);
+  let personal = await Entidade.findByPk(id);
+    if(personal){
+        await Entidade.update({telefone:body.telefone}, {where:{id:id}})
+        await Usuario.update({nome: body.nome, cpf:body.cpf, email:body.email,senha:body.senha},{where:{id:personal.usuario_id},individualHooks: true});
+      return await Entidade.findAll({include: [Usuario], where:{id:id}});
+    }
+    else
+      return null;
+  
+};

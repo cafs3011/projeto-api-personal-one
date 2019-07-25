@@ -50,28 +50,14 @@ exports.buscarTodos = (request, response, next) => {
 exports.atualizar = (request, response, next) => {
   const id = request.params.id;
 
-  const titulo = request.body.titulo;
-  const espoliador = request.body.espoliador;
-  const descricao = request.body.descricao;
 
-  PersonalModel.findByPk(id)
+  personalRepository.atualizar(id,request.body,'personalModel')
     .then(personal => {
-      if (personal) {
-        Personal.update(
-          {
-            titulo: titulo,
-            espoliador: espoliador,
-            descricao: descricao
-          },
-          { where: { id: id } }
-        )
-          .then(() => {
-            response.status(status.OK).send();
-          })
-          .catch(error => next(error));
-      } else {
+      if (personal) 
+      response.status(status.OK).send(personal);  
+      else 
         response.status(status.NOT_FOUND).send();
-      }
+      
     })
     .catch(error => next(error));
 };

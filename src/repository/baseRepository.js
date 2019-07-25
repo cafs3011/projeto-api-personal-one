@@ -26,12 +26,14 @@ exports.criar = async (body, model) => {
       return entidade;
   };
 
-  exports.atualizar = async (id, body, model) => {
+  exports.atualizar = async (entidade_id, body, model) => {
     const Entidade = require("../models/"+model);
-    const entidade = await Entidade.findByPk(id);
+    const entidade = await Entidade.findByPk(entidade_id);
         if (entidade) 
         {
-            return Entidade.update(body,{ where: { id: id } }); 
+          console.log(body);
+          console.log(entidade_id);
+            return Entidade.update(body,{ where: { id: entidade_id } }); 
         }
         return entidade;
   };

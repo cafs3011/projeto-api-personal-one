@@ -116,7 +116,7 @@ exports.autenticacao = async(request, response) => {
 
   //const usuario = await Usuario.findOne({where:{ email:emailSolicitado }});
 
-  const usuario = await Usuario.findOne({email });
+  const usuario = await Usuario.findOne({where:{email:email }});
   
     if(!usuario)
     {
