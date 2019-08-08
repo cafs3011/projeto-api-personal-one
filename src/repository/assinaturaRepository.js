@@ -1,21 +1,15 @@
 const Personal = require("../models/personalModel");
-const Usuario = require("..//models/usuarioModel");
-const baseRepository = require("../repository/baseRepository");
-const usuarioRepository = require("../repository/usuarioRepository");
+const Aluno = require("../models/alunoModel");
+const baseRepository = require("./baseRepository");
+const usuarioRepository = require("./usuarioRepository");
 const personalModelView = require("../modelView/personalModelView");
 
 exports.buscarUm = async(id, model) => {
     const Entidade = require("../models/"+model);
 
-    const entidade = await Entidade.findAll({include: [Usuario], where:{id:id}});
+    const entidade = await Entidade.findAll({include: [Personal], include: [Aluno], where:{id:id}});
       if (entidade)
-      {
-        /*console.log(entidade);
-        var usuario = await usuarioRepository.buscarUm(entidade.usuario_id,'usuarioModel');
-        console.log(usuario);
-        return new personalModelView(usuario, entidade);*/
         return entidade;
-      }
       else
         return null;
 };
@@ -35,14 +29,8 @@ exports.buscarTodos = async (limite,pagina, model) => {
     limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
     pagina = pagina <= 0 ? 0 : pagina * limite;
     
-    const entidades = await Entidade.findAll({ limit: limite, offset: pagina, include: [Usuario]});
-    
-    /*for(var entidade in await Entidade.findAll({ limit: limite, offset: pagina, include: [Usuario] }))
-    {
-      console.log(entidade);
-      entidades.push(new personalModelView(entidade.usuario,entidade));
-    }*/
-        return entidades;
+    const entidades = await Entidade.findAll({ limit: limite, offset: pagina, include: [Personal], include:[Aluno]});
+    return entidades;
 };
 
 exports.atualizar = async(id,body ,model) => {
@@ -56,8 +44,4 @@ exports.atualizar = async(id,body ,model) => {
     else
       return null;
   
-};
-
-exports.excluir = async (id,model) => {
-  return await baseRepository.excluir(id,model);
 };

@@ -1,20 +1,19 @@
-const Personal = require("../models/personalModel");
+const Assinatura = require("../models/assinaturaModel");
 const status = require("http-status");
-const personalRepository = require("../repository/personalRepository");
+const assinaturaRepository = require("../repository/assinaturaRepository");
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
-  personalRepository.buscarUm(id, "personalModel")
-    .then(personal => {
+  await assinaturaRepository.buscarUm(id, "assinaturaModel")
+    .then(entidade => {
       
-      if (personal) {
-        response.status(status.OK).send(personal);
-      } else {
+      if (entidade)
+        response.status(status.OK).send(entidade);
+      else
         response.status(status.NOT_FOUND).send();
-      }
+      
     })
-    //
     .catch(error => next(error));
 };
 
@@ -31,19 +30,18 @@ exports.buscarTodos = (request, response, next) => {
   limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
   pagina = pagina <= 0 ? 0 : pagina * limite;
 
-  personalRepository.buscarTodos(limite,pagina,"personalModel")
-        .then(personais => {
-          if(personais)
-            response.status(status.OK).send(personais);    
+  await assinaturaRepository.buscarTodos(limite,pagina,"assinaturaModel")
+        .then(entidades => {
+          if(entidades)
+            response.status(status.OK).send(entidades);    
           else
             response.status(status.NOT_FOUND).send();
   })};
 
   exports.criar = (request, response, next) => {
-    personalRepository.criar(request.body,"personalModel")
-    .then(entidadeCriada => {
-      //response.status(status.CREATED).send({entidadeCriada, token:generateToken({id:entidadeCriada.usuario_id})});
-      response.status(status.CREATED).send(entidadeCriada);
+    await assinaturaRepository.criar(request.body,"assinaturaModel")
+    .then(entidade => {
+      response.status(status.CREATED).send(entidade);
     }).catch(error => next(error));
 };
 
@@ -51,10 +49,10 @@ exports.atualizar = (request, response, next) => {
   const id = request.params.id;
 
 
-  personalRepository.atualizar(id,request.body,'personalModel')
-    .then(personal => {
-      if (personal) 
-      response.status(status.OK).send(personal);  
+  await assinaturaRepository.atualizar(id,request.body,'assinaturaModel')
+    .then(entidade => {
+      if (entidade) 
+      response.status(status.OK).send(entidade);  
       else 
         response.status(status.NOT_FOUND).send();
       
@@ -64,10 +62,10 @@ exports.atualizar = (request, response, next) => {
 
 exports.excluir = (request, response, next) => {
   const id = request.params.id;
-  
-  personalRepository.excluir(id,"personalModel")
-      .then(fichaExcluida => {
-        if(fichaExcluida)
+
+  await assinaturaRepository.excluir(id,"assinaturaModel")
+      .then(entidade => {
+        if(entidade)
           response.status(status.OK).send();
         else
           response.status(status.NOT_FOUND).send();

@@ -8,7 +8,7 @@ const Aquecimento = require("../models/aquecimentoModel");
 exports.buscarUm = async(id, model) => {
   const Entidade = require("../models/"+model);
 
-  const entidade = await Entidade.findByPk(id);
+  const entidade = await Entidade.findAll({where:{id:id}, include: [Aquecimento]});
     if (entidade) {
       return entidade;
     } else {

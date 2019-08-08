@@ -1,7 +1,7 @@
 const http = require("http");
 const express = require("express");
 const status = require("http-status");
-//var cors = require('cors');
+var cors = require('cors');
 
 //Rotas
 const alunosRoute = require("./src/routes/alunoRoute");
@@ -16,7 +16,7 @@ const bodyParser = require("body-parser");
 //var passport   = require('passport');
 //var session    = require('express-session');
 const app = express();
-//app.use(cors());
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.json());

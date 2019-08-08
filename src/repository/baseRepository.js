@@ -39,6 +39,7 @@ exports.criar = async (body, model) => {
   };
 
   exports.excluir = async (id,model) => {
+    console.log(id);
     const Entidade = require("../models/"+model);
     const entidade = Entidade.findByPk(id);
     if(entidade)
