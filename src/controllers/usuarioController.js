@@ -113,16 +113,15 @@ exports.excluir = (request, response, next) => {
 exports.autenticacao = async(request, response) => {
   const {email, senha} = request.body;
 
-
-  //const usuario = await Usuario.findOne({where:{ email:emailSolicitado }});
-
   const usuario = await Usuario.findOne({where:{email:email }});
+
   
     if(!usuario)
     {
       return response.status(status.NOT_FOUND).send();
     }
     else if(!bcrypt.compareSync(senha,usuario.senha)) {
+      console.log(usuario.id);
       return response.status(status.UNAUTHORIZED).send();
     }
     usuario.senha = undefined;
