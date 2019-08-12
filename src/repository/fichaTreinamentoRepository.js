@@ -1,8 +1,6 @@
 const Personal = require("../models/personalModel");
 const Aluno = require("../models/alunoModel");
 const baseRepository = require("./baseRepository");
-const usuarioRepository = require("./usuarioRepository");
-const personalModelView = require("../modelView/personalModelView");
 
 exports.buscarUm = async(id, model) => {
     const Entidade = require("../models/"+model);
@@ -15,8 +13,8 @@ exports.buscarUm = async(id, model) => {
 };
 
 exports.criar = async (body, model) => {
-    let assinaturaCriada = await baseRepository.criar(body,model);
-    return assinaturaCriada;
+    let entidadeCriada = await baseRepository.criar(body,model);
+    return entidadeCriada;
 };
 
 exports.buscarTodos = async (limite,pagina, model) => {

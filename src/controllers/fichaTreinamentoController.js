@@ -1,11 +1,11 @@
 const Assinatura = require("../models/assinaturaModel");
 const status = require("http-status");
-const assinaturaRepository = require("../repository/assinaturaRepository");
+const fichaTreinamentoRepository = require("../repository/fichaTreinamentoRepository");
 
 exports.buscarUm = async (request, response, next) => {
   const id = request.params.id;
 
-  await assinaturaRepository.buscarUm(id, "assinaturaModel")
+  await fichaTreinamentoRepository.buscarUm(id, "fichaTreinamentoModel")
     .then(entidade => {
       
       if (entidade)
@@ -30,7 +30,7 @@ exports.buscarTodos = async (request, response, next) => {
   limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
   pagina = pagina <= 0 ? 0 : pagina * limite;
 
-  await assinaturaRepository.buscarTodos(limite,pagina,"assinaturaModel")
+  await fichaTreinamentoRepository.buscarTodos(limite,pagina,"fichaTreinamentoModel")
         .then(entidades => {
           if(entidades)
             response.status(status.OK).send(entidades);    
@@ -40,7 +40,7 @@ exports.buscarTodos = async (request, response, next) => {
 
   exports.criar = async (request, response, next) => {
     console.log(request.body);
-    await assinaturaRepository.criar(request.body,"assinaturaModel")
+    await fichaTreinamentoRepository.criar(request.body,"fichaTreinamentoModel")
     .then(entidade => {
       response.status(status.CREATED).send(entidade);
     }).catch(error => next(error));
@@ -50,7 +50,7 @@ exports.atualizar = async (request, response, next) => {
   const id = request.params.id;
 
 
-  await assinaturaRepository.atualizar(id,request.body,'assinaturaModel')
+  await fichaTreinamentoRepository.atualizar(id,request.body,'fichaTreinamentoModel')
     .then(entidade => {
       if (entidade) 
       response.status(status.OK).send(entidade);  
@@ -64,7 +64,7 @@ exports.atualizar = async (request, response, next) => {
 exports.excluir = async (request, response, next) => {
   const id = request.params.id;
 
-  await assinaturaRepository.excluir(id,"assinaturaModel")
+  await fichaTreinamentoRepository.excluir(id,"fichaTreinamentoModel")
       .then(entidade => {
         if(entidade)
           response.status(status.OK).send();

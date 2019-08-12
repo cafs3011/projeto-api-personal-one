@@ -50,7 +50,6 @@ exports.buscarTodos =  async (request, response, next) => {
 };
 
 exports.criar = (request, response, next) => {
-
   AlunoModel.create(request.body)
     .then(() => {
       response.status(status.CREATED).send();

@@ -9,6 +9,8 @@ const usuariosRoute = require("./src/routes/usuarioRoute");
 const exerciciosRoute = require("./src/routes/exercicioRoute");
 const fichasRoute = require("./src/routes/fichaRoute");
 const personalRoute = require("./src/routes/personalRoute");
+const assinaturaRoute = require("./src/routes/assinaturaRoute");
+const fichaTreinamentoRoute = require("./src/routes/fichaTreinamentoRoute");
 
 const sequelize = require("./src/database/database");
 const bodyParser = require("body-parser");
@@ -26,6 +28,8 @@ app.use("/api",personalRoute);
 app.use("/api", alunosRoute);
 app.use("/api",exerciciosRoute);
 app.use("/api",fichasRoute);
+app.use("/api",assinaturaRoute);
+app.use("/api",fichaTreinamentoRoute);
 
 app.use((request, response, next) => {
   response.status(status.NOT_FOUND).send();
@@ -36,7 +40,7 @@ app.use((error, request, response, next) => {
 });
 
 var order = ['exercicioModel.js', 'usuarioModel.js', 'fichaModel.js','alunoModel.js',
-  'aquecimentoModel.js','personalModel.js'];
+  'aquecimentoModel.js','personalModel.js', 'assinaturaModel.js','fichaTreinamentoModel.js'];
 
 order.forEach(entidade => {
   var model = require("./src/models/"+entidade);
