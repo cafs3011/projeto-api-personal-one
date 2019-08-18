@@ -20,6 +20,12 @@ exports.buscarTodos = async (limite,pagina, model) => {
         return entidades;
 };
 
+exports.filtrar = async(body,model) =>{
+  const Entidade = require("../models/"+model);
+  console.log(body);
+  return  entidadeResultado = await Entidade.findOne(body);
+}
+
 exports.criar = async (body, model) => {
   const Entidade = require("../models/"+model);
     const entidade = await Entidade.create(body);

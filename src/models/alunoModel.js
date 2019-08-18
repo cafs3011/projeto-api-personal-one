@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/database");
-const usuario = require('./usuarioModel');
 const Model = Sequelize.Model;
+const Usuario = require('./usuarioModel');
 
 class Aluno extends Model{
 }
@@ -40,7 +40,10 @@ module.exports =  Aluno.init(
   telefone:{
     allowNull: false,
     require:true,
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING(15),
+        validate:{
+          isNumeric:true
+        }
   },
   restricao:{
     allowNull:false,
@@ -49,7 +52,7 @@ module.exports =  Aluno.init(
   observacao:{
     allowNull:false,
     type: Sequelize.TEXT
-  },
+  }/*,
   usuario_id : {
     type: Sequelize.INTEGER,
     unique:true,
@@ -59,7 +62,7 @@ module.exports =  Aluno.init(
       // This is the column name of the referenced model
       key: 'id'
     }
-  },
+  },*/
 },
   {
     sequelize, 
@@ -67,4 +70,4 @@ module.exports =  Aluno.init(
     freezeTableName : true
 }
 );
-
+Aluno.belongsTo(Usuario,{foreignKey :'usuario_id', targetKey: 'id'});

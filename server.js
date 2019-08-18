@@ -2,8 +2,33 @@ const http = require("http");
 const express = require("express");
 const status = require("http-status");
 var cors = require('cors');
+const swaggerDoc = require('./src/config/swaggerDoc');
 
-//Rotas
+
+
+
+
+
+
+const sequelize = require("./src/database/database");
+const bodyParser = require("body-parser");
+
+const app = express(express);
+
+
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(express.json());
+
+/*require('./src/routes/alunoRoute')(app);
+require('./src/routes/usuarioRoute')(app);
+require('./src/routes/exercicioRoute')(app);
+require('./src/routes/fichaRoute')(app);
+require('./src/routes/personalRoute')(app);
+require('./src/routes/assinaturaRoute')(app);
+require('./src/routes/fichaTreinamentoRoute')(app);*/
 const alunosRoute = require("./src/routes/alunoRoute");
 const usuariosRoute = require("./src/routes/usuarioRoute");
 const exerciciosRoute = require("./src/routes/exercicioRoute");
@@ -12,24 +37,13 @@ const personalRoute = require("./src/routes/personalRoute");
 const assinaturaRoute = require("./src/routes/assinaturaRoute");
 const fichaTreinamentoRoute = require("./src/routes/fichaTreinamentoRoute");
 
-const sequelize = require("./src/database/database");
-const bodyParser = require("body-parser");
-
-//var passport   = require('passport');
-//var session    = require('express-session');
-const app = express();
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(express.json());
-
-app.use("/api", usuariosRoute);
-app.use("/api",personalRoute);
-app.use("/api", alunosRoute);
-app.use("/api",exerciciosRoute);
-app.use("/api",fichasRoute);
-app.use("/api",assinaturaRoute);
-app.use("/api",fichaTreinamentoRoute);
+app.use('/api',usuariosRoute);
+app.use('/api',alunosRoute);
+app.use('/api',personalRoute);
+app.use('/api',exerciciosRoute);
+app.use('/api',fichasRoute);
+app.use('/api',assinaturaRoute);
+app.use('/api',fichaTreinamentoRoute);
 
 app.use((request, response, next) => {
   response.status(status.NOT_FOUND).send();
@@ -47,20 +61,15 @@ order.forEach(entidade => {
   model.sync({force:false});
   
 });
-const port = process.env.PORT || 3001;
 
-  app.set("port", port);
+swaggerDoc(app);
+
+app.listen(3001,() => console.log(`Escutando na porta 3001`));
+
+  /*app.set("port", port);
 
   const server = http.createServer(app);
 
-  server.listen(port);
+  server.listen(port);*/
   
-/*sequelize.sync({ force: true }).then(() => {
-  const port = process.env.PORT || 3001;
-
-  app.set("port", port);
-
-  const server = http.createServer(app);
-
-  server.listen(port);
-});*/
+  module.exports = app;

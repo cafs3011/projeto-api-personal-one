@@ -1,7 +1,6 @@
 const Personal = require("../models/personalModel");
 const Usuario = require("..//models/usuarioModel");
 const baseRepository = require("../repository/baseRepository");
-const usuarioRepository = require("../repository/usuarioRepository");
 const personalModelView = require("../modelView/personalModelView");
 
 exports.buscarUm = async(id, model) => {

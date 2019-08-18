@@ -2,6 +2,7 @@ const AlunoModel = require("../models/alunoModel");
 const UsuarioModel = require("../models/usuarioModel");
 const status = require("http-status");
 const UsuarioModelView = require('../modelView/alunoModelView');
+const AlunoRepository = require('../repository/alunoRepository');
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
@@ -20,29 +21,22 @@ exports.buscarUm = (request, response, next) => {
 
 exports.buscarTodos =  async (request, response, next) => {
   try{
-  let limite = parseInt(request.query.limite || 0);
-  let pagina = parseInt(request.query.pagina || 0);
-
-  if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
-    response.status(status.BAD_REQUEST).send();
-  }
-
-  const ITENS_POR_PAGINA = 10;
-
-  limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
-  pagina = pagina <= 0 ? 0 : pagina * limite;
-
-  alunos = await AlunoModel.findAll({ limit: limite, offset: pagina });
+    let limite = parseInt(request.query.limite || 0);
+    let pagina = parseInt(request.query.pagina || 0);
   
-  var list = [];
-  for(let aluno of alunos){
-    const usuario =  await UsuarioModel.findByPk(aluno.usuario_id);
-    if(usuario){
-      const usuarioModelView = new UsuarioModelView(usuario, aluno);
-      list.push(usuarioModelView);
+    if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
+      response.status(status.BAD_REQUEST).send();
     }
-  }  
-  response.send({"alunos":list});
+  
+    const ITENS_POR_PAGINA = 10;
+  
+    limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
+    pagina = pagina <= 0 ? 0 : pagina * limite;
+
+  alunos = await AlunoRepository.buscarTodos(limite,pagina)
+  
+
+  response.send(alunos);
 }
     catch(error){
       next(error);
@@ -50,12 +44,18 @@ exports.buscarTodos =  async (request, response, next) => {
 };
 
 exports.criar = (request, response, next) => {
-  AlunoModel.create(request.body)
-    .then(() => {
-      response.status(status.CREATED).send();
+
+   AlunoRepository.criar(request.body)
+    .then(aluno  => {
+      if(aluno){
+      console.log(aluno);
+        response.status(status.CREATED).send(aluno);
+      }
+        else
+        response.status(status.NOT_ACCEPTABLE).send({mensagem:response.mensagem});
     })
     .catch(error => next(error));
-};
+    };
 
 exports.atualizar = (request, response, next) => {
   const id = request.params.id;

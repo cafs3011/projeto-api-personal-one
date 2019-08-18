@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../config/autorizacao');
 const express = require('express');
+const usuarioRepository = require("../repository/usuarioRepository");
 
 
 exports.buscarUm = (request, response, next) => {
@@ -31,14 +32,11 @@ exports.buscarTodos = async (request, response, next) => {
         response.status(status.BAD_REQUEST).send();
       }
 
-      const ITENS_POR_PAGINA = 10;
+      
 
-      limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
-      pagina = pagina <= 0 ? 0 : pagina * limite;
+      const usuario = await usuarioRepository.buscarTodos(limite,pagina)
 
-      const usuarios = await Usuario.findAll({limit: limite, offset: pagina });
-
-      response.send(usuarios);
+      response.send(usuario);
   }
   catch(error) {
        next(error);
@@ -47,7 +45,7 @@ exports.buscarTodos = async (request, response, next) => {
 
 exports.criar = async(request, response, next) => {
   try{
-  const usuario = await Usuario.create(request.body);
+  let usuario = await usuarioRepository.create(request.body);
   
   
       if(!usuario){
