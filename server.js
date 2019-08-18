@@ -2,7 +2,7 @@ const http = require("http");
 const express = require("express");
 const status = require("http-status");
 var cors = require('cors');
-const swaggerDoc = require('./src/config/swaggerDoc');
+//const swaggerDoc = require('./src/config/swaggerDoc');
 
 
 
@@ -62,7 +62,7 @@ order.forEach(entidade => {
   
 });
 
-swaggerDoc(app);
+//swaggerDoc(app);
 
 app.listen(3001,() => console.log(`Escutando na porta 3001`));
 

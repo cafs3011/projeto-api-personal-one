@@ -1,5 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/database");
+const Ficha = require("..//models/fichaModel");
+const Exercicio = require("..//models/exercicioModel");
 const Model = Sequelize.Model;
 
 class Aquecimento extends Model{}
@@ -25,7 +27,7 @@ module.exports =  Aquecimento.init(
     validate: {
       len: [1, 255]
     }
-  },
+  }/*,
   fichaId:{
       allowNull:false,
       require:true,
@@ -39,7 +41,7 @@ module.exports =  Aquecimento.init(
       type:Sequelize.INTEGER,
       references:{model:'Exercicio', key:'id'},
       onDelete: 'CASCADE'
-  }
+  }*/
 },
   {
     sequelize, 
@@ -47,6 +49,5 @@ module.exports =  Aquecimento.init(
     freezeTableName:true
 
 });
-Aquecimento.associate = (models) => {
-  Exercicio.belongsTo(models.Ficha);
-};
+Aquecimento.belongsTo(Ficha,{foreignKey :'fichaId', targetKey: 'id'});
+Aquecimento.belongsTo(Exercicio,{foreignKey :'exercicioId', targetKey: 'id'});

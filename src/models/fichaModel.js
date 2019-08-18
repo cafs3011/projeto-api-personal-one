@@ -49,4 +49,4 @@ module.exports =  Ficha.init(
 
 });
 
-Ficha.hasMany(Aquecimento);
+//Ficha.hasMany(Aquecimento);

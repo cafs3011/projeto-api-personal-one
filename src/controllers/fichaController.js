@@ -1,9 +1,6 @@
-const Ficha = require("../models/fichaModel");
-const Aquecimento = require("../models/aquecimentoModel");
 const baseRepository = require("../repository/baseRepository");
 const fichaRepository = require("../repository/fichaRepository");
 const status = require("http-status");
-const express = require('express');
 
 exports.buscarUm = (request, response, next) => {
     const id = request.params.id;

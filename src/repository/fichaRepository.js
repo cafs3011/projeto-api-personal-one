@@ -1,5 +1,3 @@
-const Ficha = require("../models/fichaModel");
-
 const baseRepository = require("../repository/baseRepository");
 const aquecimentoRepository = require("../repository/aquecimentoRepository");
 const fichaModelView = require("../modelView/fichaModelView");
