@@ -51,7 +51,7 @@ order.forEach(entidade => {
   model.sync({ force: false });
 });
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3004;
 app.set("port", port);
 const server = http.createServer(app);
 server.listen(port);

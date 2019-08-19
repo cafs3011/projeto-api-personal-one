@@ -1,11 +1,10 @@
 const Usuario = require("../models/usuarioModel");
 const status = require("http-status");
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const authConfig = require('../config/autorizacao');
-const express = require('express');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const authConfig = require("../config/autorizacao");
+const express = require("express");
 const usuarioRepository = require("../repository/usuarioRepository");
-
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
@@ -23,44 +22,37 @@ exports.buscarUm = (request, response, next) => {
 };
 
 exports.buscarTodos = async (request, response, next) => {
-  try{
+  try {
+    let limite = parseInt(request.query.limite || 0);
+    let pagina = parseInt(request.query.pagina || 0);
 
-      let limite = parseInt(request.query.limite || 0);
-      let pagina = parseInt(request.query.pagina || 0);
+    if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
+      response.status(status.BAD_REQUEST).send();
+    }
 
-      if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
-        response.status(status.BAD_REQUEST).send();
-      }
+    const usuario = await usuarioRepository.buscarTodos(limite, pagina);
 
-      
-
-      const usuario = await usuarioRepository.buscarTodos(limite,pagina)
-
-      response.send(usuario);
+    response.send(usuario);
+  } catch (error) {
+    next(error);
   }
-  catch(error) {
-       next(error);
-      };
 };
 
-exports.criar = async(request, response, next) => {
-  try{
-  let usuario = await usuarioRepository.create(request.body);
-  
-  
-      if(!usuario){
-        response.status(status.INTERNAL_SERVER_ERROR);
-      }
-      else{
-      
-          usuario.senha = undefined;
-            response.status(status.CREATED).send({
-              usuario,
-              token:generateToken({id:usuario.id})
-            });
-      }
-      }
-  catch(error){
+exports.criar = async (request, response, next) => {
+  try {
+    console.log("passei aqui");
+    let usuario = await usuarioRepository.criar(request.body);
+
+    if (!usuario) {
+      response.status(status.INTERNAL_SERVER_ERROR);
+    } else {
+      usuario.senha = undefined;
+      response.status(status.CREATED).send({
+        usuario,
+        token: generateToken({ id: usuario.id })
+      });
+    }
+  } catch (error) {
     next(error);
   }
 };
@@ -68,14 +60,10 @@ exports.criar = async(request, response, next) => {
 exports.atualizar = (request, response, next) => {
   const id = request.params.id;
 
-
   Usuario.findByPk(id)
     .then(usuario => {
       if (usuario) {
-        Usuario.update(
-          request.body,
-          { where: { id: id } }
-        )
+        Usuario.update(request.body, { where: { id: id } })
           .then(() => {
             response.status(status.OK).send();
           })
@@ -107,34 +95,27 @@ exports.excluir = (request, response, next) => {
     .catch(error => next(error));
 };
 
+exports.autenticacao = async (request, response) => {
+  const { email, senha } = request.body;
 
-exports.autenticacao = async(request, response) => {
-  const {email, senha} = request.body;
+  const usuario = await Usuario.findOne({ where: { email: email } });
 
-  const usuario = await Usuario.findOne({where:{email:email }});
+  if (!usuario) {
+    return response.status(status.NOT_FOUND).send();
+  } else if (!bcrypt.compareSync(senha, usuario.senha)) {
+    console.log(usuario.id);
+    return response.status(status.UNAUTHORIZED).send();
+  }
+  usuario.senha = undefined;
 
-  
-    if(!usuario)
-    {
-      return response.status(status.NOT_FOUND).send();
-    }
-    else if(!bcrypt.compareSync(senha,usuario.senha)) {
-      console.log(usuario.id);
-      return response.status(status.UNAUTHORIZED).send();
-    }
-    usuario.senha = undefined;
-    
-
-    response.send({
-      usuario, token:
-      generateToken({id:usuario.id})
-
-    });
-  };
-
-function generateToken(params={}){
-return jwt.sign(params,authConfig.secret,
-  {
-    expiresIn:86400
+  response.send({
+    usuario,
+    token: generateToken({ id: usuario.id })
   });
 };
+
+function generateToken(params = {}) {
+  return jwt.sign(params, authConfig.secret, {
+    expiresIn: 86400
+  });
+}
