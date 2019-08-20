@@ -1,6 +1,4 @@
-
 const baseRepository = require("../repository/baseRepository");
-const Usuario = require("..//models/usuarioModel");
 const alunoModelView = require("../modelView/alunoModelView");
 
 exports.buscarUm = async(id) => {

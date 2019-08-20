@@ -20,28 +20,28 @@ exports.buscarUm = (request, response, next) => {
     .catch(error => next(error));
 };
 
-exports.buscarTodos =  async (request, response, next) => {
-  try{
+exports.buscarTodos = async (request, response, next) => {
+  try {
     let limite = parseInt(request.query.limite || 0);
     let pagina = parseInt(request.query.pagina || 0);
-  
+
     if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
       response.status(status.BAD_REQUEST).send();
     }
-  
+
     const ITENS_POR_PAGINA = 10;
-  
-    limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
+
+    limite =
+      limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
     pagina = pagina <= 0 ? 0 : pagina * limite;
 
   let alunos = await AlunoRepository.buscarTodos(limite,pagina);
   
 
-  response.send(alunos);
-}
-    catch(error){
-      next(error);
-    }
+    response.send(alunos);
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.criar = async (request, response, next) => {
