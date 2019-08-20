@@ -5,7 +5,7 @@ const personalRepository = require("../repository/personalRepository");
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
-  personalRepository.buscarUm(id, "personalModel")
+  personalRepository.buscarUm(id)
     .then(personal => {
       
       if (personal) {
@@ -14,35 +14,35 @@ exports.buscarUm = (request, response, next) => {
         response.status(status.NOT_FOUND).send();
       }
     })
-    //
     .catch(error => next(error));
 };
 
-exports.buscarTodos = (request, response, next) => {
-  let limite = parseInt(request.query.limite || 0);
-  let pagina = parseInt(request.query.pagina || 0);
+exports.buscarTodos = async (request, response, next) => {
+  try
+  {
+      let limite = parseInt(request.query.limite || 0);
+      let pagina = parseInt(request.query.pagina || 0);
 
-  if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
-    response.status(status.BAD_REQUEST).send();
+      if (!Number.isInteger(limite) || !Number.isInteger(pagina)) {
+        response.status(status.BAD_REQUEST).send();
+      }
+
+      const ITENS_POR_PAGINA = 10;
+
+      limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
+      pagina = pagina <= 0 ? 0 : pagina * limite;
+
+      let personais = await personalRepository.buscarTodos(limite,pagina);
+      response.send(personais);
   }
-
-  const ITENS_POR_PAGINA = 10;
-
-  limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
-  pagina = pagina <= 0 ? 0 : pagina * limite;
-
-  personalRepository.buscarTodos(limite,pagina,"personalModel")
-        .then(personais => {
-          if(personais)
-            response.status(status.OK).send(personais);    
-          else
-            response.status(status.NOT_FOUND).send();
-  })};
+catch(error){
+  next(error);
+}
+};
 
   exports.criar = (request, response, next) => {
-    personalRepository.criar(request.body,"personalModel")
+    personalRepository.criar(request.body)
     .then(entidadeCriada => {
-      //response.status(status.CREATED).send({entidadeCriada, token:generateToken({id:entidadeCriada.usuario_id})});
       response.status(status.CREATED).send(entidadeCriada);
     }).catch(error => next(error));
 };
@@ -51,7 +51,7 @@ exports.atualizar = (request, response, next) => {
   const id = request.params.id;
 
 
-  personalRepository.atualizar(id,request.body,'personalModel')
+  personalRepository.atualizar(id,request.body)
     .then(personal => {
       if (personal) 
       response.status(status.OK).send(personal);  

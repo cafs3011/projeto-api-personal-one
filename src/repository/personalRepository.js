@@ -3,57 +3,63 @@ const Usuario = require("..//models/usuarioModel");
 const baseRepository = require("../repository/baseRepository");
 const personalModelView = require("../modelView/personalModelView");
 
-exports.buscarUm = async(id, model) => {
-    const Entidade = require("../models/"+model);
-
-    const entidade = await Entidade.findAll({include: [Usuario], where:{id:id}});
-      if (entidade)
-      {
-        /*console.log(entidade);
-        var usuario = await usuarioRepository.buscarUm(entidade.usuario_id,'usuarioModel');
-        console.log(usuario);
-        return new personalModelView(usuario, entidade);*/
-        return entidade;
-      }
-      else
-        return null;
+exports.buscarUm = async(id) => {
+  let personalExistente = await baseRepository.filtrar({where:{id: id}, raw:true},'personalModel');
+  if(!personalExistente) return null;
+  let usuarioExistente = await baseRepository.filtrar({where:{id:personalExistente.usuario_id}, raw:true},'usuarioModel');
+    return new personalModelView(usuarioExistente,personalExistente);
 };
 
-exports.criar = async (body, model) => {
+exports.buscarPorUsuario = async(usuario_id) =>{
+  let personalExistente = await baseRepository.filtrar({where:{usuario_id: usuario_id}, raw:true},'personalModel');
+  return personalExistente;
+}
+
+exports.criar = async (body) => {
+
+  let usuarioExistente = await baseRepository.filtrar({where:{email: body.email}}, 'usuarioModel');
+  if(!usuarioExistente){
     let usuarioJson = {nome: body.nome, email: body.email, senha:body.senha, cpf:body.cpf};
-    let usuarioCriado = await baseRepository.criar(usuarioJson,"usuarioModel");
-    let personalJson = {telefone: body.telefone, usuario_id: usuarioCriado.id};
-    let personalCriado = await baseRepository.criar(personalJson,'personalModel')
-    return new personalModelView(usuarioCriado,personalCriado);
+    usuarioExistente = await baseRepository.criar(usuarioJson,"usuarioModel");
+  }
+
+  let personalExistente = await baseRepository.filtrar({where:{usuario_id: usuarioExistente.dataValues.id}},'personalModel');
+
+    
+  if(personalExistente) throw ('Personal já cadastrado');
+
+    let personalJson = {telefone: body.telefone, usuario_id: usuarioExistente.id};
+    let personalCriado = await baseRepository.criar(personalJson,'personalModel');
+    return new personalModelView(usuarioExistente,personalCriado);
 };
 
-exports.buscarTodos = async (limite,pagina, model) => {
-  const Entidade = require("../models/"+model);
-    const ITENS_POR_PAGINA = 10;
-    
-    limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
-    pagina = pagina <= 0 ? 0 : pagina * limite;
-    
-    const entidades = await Entidade.findAll({ limit: limite, offset: pagina, include: [Usuario]});
-    
-    /*for(var entidade in await Entidade.findAll({ limit: limite, offset: pagina, include: [Usuario] }))
+exports.buscarTodos = async (limite,pagina) => {
+  const Entidade = require("../models/personalModel");
+
+    let entidades = await Entidade.findAll({ raw:true, limit: limite, offset: pagina});
+    let retorno = [];
+    for(var i in entidades)
     {
-      console.log(entidade);
-      entidades.push(new personalModelView(entidade.usuario,entidade));
-    }*/
-        return entidades;
+        let usuario = await baseRepository.filtrar({where:{id:entidades[i].usuario_id},raw:true},'usuarioModel');
+        retorno[i] = new personalModelView(usuario,entidades[i]);
+    }
+    return retorno;
 };
 
-exports.atualizar = async(id,body ,model) => {
-  const Entidade = require("../models/"+model);
-  let personal = await Entidade.findByPk(id);
-    if(personal){
-        await Entidade.update({telefone:body.telefone}, {where:{id:id}})
-        await Usuario.update({nome: body.nome, cpf:body.cpf, email:body.email,senha:body.senha},{where:{id:personal.usuario_id},individualHooks: true});
-      return await Entidade.findAll({include: [Usuario], where:{id:id}});
-    }
-    else
-      return null;
+exports.atualizar = async(id,body) => {
+  let personalExistente = await baseRepository.filtrar({where:{id:id}},'personalModel');
+  if(!personalExistente) return null;
+
+  let usuarioJson = {nome: body.nome, email: body.email, cpf:body.cpf};
+  let usuarioExistente = await baseRepository.atualizar(personalExistente.usuario_id, usuarioJson,"usuarioModel");
+
+  let personalJson = {telefone: body.telefone};
+  let personalAtualizado = await baseRepository.atualizar(personalExistente.id,personalJson,'personalModel')
+
+  usuarioExistente = await baseRepository.filtrar({where:{id:personalExistente.usuario_id}},'usuarioModel');
+  personalAtualizado = await baseRepository.filtrar({where:{id:id}},'personalModel');
+
+  return new personalModelView(usuarioExistente,personalAtualizado);
   
 };
 

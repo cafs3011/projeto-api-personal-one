@@ -3,11 +3,13 @@ const UsuarioModel = require("../models/usuarioModel");
 const status = require("http-status");
 const UsuarioModelView = require('../modelView/alunoModelView');
 const AlunoRepository = require('../repository/alunoRepository');
+const AssinaturaRepository = require('../repository/assinaturaRepository');
+const PersonalRepository = require('../repository/personalRepository');
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
 
-  AlunoModel.findByPk(id)
+  AlunoRepository.buscarUm(id)
     .then(aluno => {
       if (aluno) {
         response.status(status.OK).send(aluno);
@@ -15,7 +17,6 @@ exports.buscarUm = (request, response, next) => {
         response.status(status.NOT_FOUND).send();
       }
     })
-    //
     .catch(error => next(error));
 };
 
@@ -33,7 +34,7 @@ exports.buscarTodos =  async (request, response, next) => {
     limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
     pagina = pagina <= 0 ? 0 : pagina * limite;
 
-  alunos = await AlunoRepository.buscarTodos(limite,pagina)
+  let alunos = await AlunoRepository.buscarTodos(limite,pagina);
   
 
   response.send(alunos);
@@ -43,34 +44,34 @@ exports.buscarTodos =  async (request, response, next) => {
     }
 };
 
-exports.criar = (request, response, next) => {
+exports.criar = async (request, response, next) => {
 
-   AlunoRepository.criar(request.body)
-    .then(aluno  => {
+   let aluno = await AlunoRepository.criar(request.body)
+    try{
       if(aluno){
-      console.log(aluno);
-        response.status(status.CREATED).send(aluno);
-      }
+          if(request.body.usuario_id && request.body.dataInicio && request.body.dataFim){
+            let personal = await PersonalRepository.buscarPorUsuario(request.body.usuario_id);
+            let assinaturaJson = {dataInicio: request.body.dataInicio, dataFim: request.body.dataFim, personal_id:personal.id,aluno_id:aluno.id};
+            let assinatura = await AssinaturaRepository.criar(assinaturaJson, 'assinaturaModel');
+            let alunoRetorno = {...aluno, dataInicioAssinatura: assinatura.dataInicio, dataFimAssinatura:assinatura.dataFim};
+            response.status(status.CREATED).send(alunoRetorno);
+          }
+          else
+            response.status(status.CREATED).send(aluno);
+      } 
         else
         response.status(status.NOT_ACCEPTABLE).send({mensagem:response.mensagem});
-    })
-    .catch(error => next(error));
+    }
+    catch(error){next(error);}
     };
 
 exports.atualizar = (request, response, next) => {
   const id = request.params.id;
 
-  AlunoModel.findByPk(id)
+  AlunoRepository.atualizar(request.body,id)
     .then(aluno => {
       if (aluno) {
-        AlunoModel.update(
-          request.body,
-          { where: { id: id } }
-        )
-          .then(() => {
-            response.status(status.OK).send();
-          })
-          .catch(error => next(error));
+        response.status(status.OK).send(aluno);
       } else {
         response.status(status.NOT_FOUND).send();
       }

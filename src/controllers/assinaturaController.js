@@ -39,7 +39,6 @@ exports.buscarTodos = async (request, response, next) => {
   })};
 
   exports.criar = async (request, response, next) => {
-    console.log(request.body);
     await assinaturaRepository.criar(request.body,"assinaturaModel")
     .then(entidade => {
       response.status(status.CREATED).send(entidade);

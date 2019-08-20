@@ -22,7 +22,6 @@ exports.buscarTodos = async (limite,pagina, model) => {
 
 exports.filtrar = async(body,model) =>{
   const Entidade = require("../models/"+model);
-  console.log(body);
   return  entidadeResultado = await Entidade.findOne(body);
 }
 
@@ -37,15 +36,12 @@ exports.criar = async (body, model) => {
     const entidade = await Entidade.findByPk(entidade_id);
         if (entidade) 
         {
-          console.log(body);
-          console.log(entidade_id);
             return Entidade.update(body,{ where: { id: entidade_id } }); 
         }
         return entidade;
   };
 
   exports.excluir = async (id,model) => {
-    console.log(id);
     const Entidade = require("../models/"+model);
     const entidade = Entidade.findByPk(id);
     if(entidade)

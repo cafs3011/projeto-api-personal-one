@@ -45,7 +45,7 @@ exports.buscarTodos = async (request, response, next) => {
 
 exports.criar = async(request, response, next) => {
   try{
-  let usuario = await usuarioRepository.create(request.body);
+  let usuario = await usuarioRepository.criar(request.body);
   
   
       if(!usuario){
