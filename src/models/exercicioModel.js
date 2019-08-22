@@ -27,6 +27,16 @@ module.exports =  Exercicio.init(
     validate: {
       len: [1, 100]
     }
+  },
+  enderecoImagem: {
+    allowNull: false,
+    require:false,
+    type: Sequelize.TEXT
+  },
+  publicIdImagem:{
+    allownull:false,
+    require:false,
+    type: Sequelize.TEXT
   }
 },
   {

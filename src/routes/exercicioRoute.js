@@ -10,5 +10,6 @@ router.get("/exercicios", controller.buscarTodos);
 router.post("/exercicios", controller.criar);
 router.put("/exercicios/:id", controller.atualizar);
 router.delete("/exercicios/:id", controller.excluir);
+router.post("/exercicios/:id", controller.postarImagem);
 
 module.exports = router;

@@ -38,7 +38,6 @@ exports.buscarTodos = async (request, response, next) => {
   }
 };
 
-<<<<<<< HEAD
 exports.criar = async(request, response, next) => {
   try{
   let usuario = await usuarioRepository.criar(request.body);
@@ -57,23 +56,6 @@ exports.criar = async(request, response, next) => {
       }
       }
   catch(error){
-=======
-exports.criar = async (request, response, next) => {
-  try {
-    console.log("passei aqui");
-    let usuario = await usuarioRepository.criar(request.body);
-
-    if (!usuario) {
-      response.status(status.INTERNAL_SERVER_ERROR);
-    } else {
-      usuario.senha = undefined;
-      response.status(status.CREATED).send({
-        usuario,
-        token: generateToken({ id: usuario.id })
-      });
-    }
-  } catch (error) {
->>>>>>> a7d08aeb18c6e1b02902d641cc02c4632473f623
     next(error);
   }
 };
