@@ -4,6 +4,7 @@ const status = require("http-status");
 var cors = require("cors");
 const bodyParser = require("body-parser");
 const formData = require("express-form-data");
+const swaggerDoc = require("./src/config/swaggerDoc");
 const app = express(express);
 
 app.use(cors());
@@ -11,6 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(formData.parse());
+
 
 const alunosRoute = require("./src/routes/alunoRoute");
 const usuariosRoute = require("./src/routes/usuarioRoute");
@@ -27,6 +29,7 @@ app.use("/api", exerciciosRoute);
 app.use("/api", fichasRoute);
 app.use("/api", assinaturaRoute);
 app.use("/api", fichaTreinamentoRoute);
+swaggerDoc(app);
 
 app.use((request, response, next) => {
   response.status(status.NOT_FOUND).send();
@@ -55,4 +58,5 @@ order.forEach(entidade => {
 const port = process.env.PORT || 3001;
 app.set("port", port);
 const server = http.createServer(app);
+
 server.listen(port);

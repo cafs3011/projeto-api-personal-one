@@ -6,10 +6,17 @@ const swaggerDefinition ={
     info:{
       title: 'Personal One API',
       version: '1.0.0',
-      description: 'Endpoints para testar as rotas da API'
+      description: 'Endpoints para testar as rotas da API',
+      consumes :['application/json'],
+      produces :['application/json'],
+      contact: {
+        name: 'Cíntia Ferreira',
+        email: 'cintia.aferreiras@gmail.com'
+      }
+      
     },
     host: 'localhost:3001',
-    basePatch: '/',
+    basePath: '/api',
     securityDefinitions:{
       bearerAuth:{
           type: 'apiKey',
@@ -29,10 +36,12 @@ const swaggerDefinition ={
   const swaggerSpec = swaggerJSDoc(options);
 
   module.exports =(app) => {
+
+    app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
     app.get('/swagger.json',function(req,res){
         res.setHeader('Content-Type','application/json');
         res.send(swaggerSpec);
     });
-    app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    console.log('aqui');
+    
   }

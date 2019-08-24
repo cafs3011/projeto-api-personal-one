@@ -8,3 +8,17 @@ exports.buscarUm = async (id, model) => {
   console.log(id);
   return await baseRepository.buscarUm(id, model);
 };
+
+exports.buscarTodos = async (limite,pagina) => {
+  const Entidade = require("../models/usuarioModel");
+
+    let entidades = await Entidade.findAll({ raw:true});
+    for(var i in entidades)
+    {
+      entidades[i].senha = undefined;
+      entidades[i].createdAt = undefined;
+      entidades[i].updatedAt = undefined;
+    }
+    console.log(entidades);
+    return entidades;
+};
