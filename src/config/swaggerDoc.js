@@ -14,14 +14,14 @@ const swaggerDefinition = {
       email: "cintia.aferreiras@gmail.com"
     }
   },
-  host: "localhost:3001",
+  host: process.env.USERDOMAIN,
   basePath: "/api",
   securityDefinitions: {
     bearerAuth: {
       type: "apiKey",
       name: "Authorization",
       scheme: "bearer",
-      bearerFormat: 'JWT' ,
+      bearerFormat: "JWT",
       in: "header"
     }
   }

@@ -13,7 +13,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(formData.parse());
 
-
 const alunosRoute = require("./src/routes/alunoRoute");
 const usuariosRoute = require("./src/routes/usuarioRoute");
 const exerciciosRoute = require("./src/routes/exercicioRoute");
@@ -54,7 +53,7 @@ order.forEach(entidade => {
   var model = require("./src/models/" + entidade);
   model.sync({ force: false });
 });
-
+console.log(process.env);
 const port = process.env.PORT || 3001;
 app.set("port", port);
 const server = http.createServer(app);
