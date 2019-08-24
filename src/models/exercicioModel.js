@@ -29,12 +29,12 @@ module.exports =  Exercicio.init(
     }
   },
   enderecoImagem: {
-    allowNull: false,
+    allowNull: true,
     require:false,
     type: Sequelize.TEXT
   },
   publicIdImagem:{
-    allownull:false,
+    allownull:true,
     require:false,
     type: Sequelize.TEXT
   }
