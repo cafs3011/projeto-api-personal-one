@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const authConfig = require("../config/autorizacao");
 
 module.exports = (request, response, next) =>{
-
     const authHeader = request.headers.authorization;
    
     if(!authHeader){
