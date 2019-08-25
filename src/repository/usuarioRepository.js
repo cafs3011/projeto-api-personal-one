@@ -5,7 +5,6 @@ exports.criar = async body => {
 };
 
 exports.buscarUm = async (id, model) => {
-  console.log(id);
   return await baseRepository.buscarUm(id, model);
 };
 

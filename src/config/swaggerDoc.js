@@ -14,7 +14,7 @@ const swaggerDefinition = {
       email: "cintia.aferreiras@gmail.com"
     }
   },
-  host: process.env.USERDOMAIN,
+  host: "localhost:3001", //process.env.USERDOMAIN,
   basePath: "/api",
   securityDefinitions: {
     bearerAuth: {

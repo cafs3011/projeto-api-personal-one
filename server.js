@@ -53,7 +53,6 @@ order.forEach(entidade => {
   var model = require("./src/models/" + entidade);
   model.sync({ force: false });
 });
-console.log(process.env);
 const port = process.env.PORT || 3001;
 app.set("port", port);
 const server = http.createServer(app);

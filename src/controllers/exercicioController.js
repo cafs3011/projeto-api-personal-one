@@ -58,6 +58,7 @@ exports.criar = async (request, response, next) => {
 
   exports.postarImagem = (req,res,next) => {
     const id = req.params.id;
+    console.log(id);
     Exercicio.findByPk(id)
     .then(exercicio =>{
 

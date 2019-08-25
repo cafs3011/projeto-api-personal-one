@@ -1,7 +1,7 @@
 /**
  *  @swagger
  *  definitions:
- *    personal:
+ *    aluno:
  *      type: object
  *      properties:
  *        id:
@@ -15,20 +15,33 @@
  *          format: email
  *        telefone:
  *          type: string
+ *        dataNascimento:
+ *          type: string
+ *          format: date
+ *        altura:
+ *          type: number
+ *          format: double
+ *        restricao:
+ *          type: string
+ *        observacao:
+ *          type: string
+ *        peso:
+ *          type: number
+ *          format: double
  *        usuario_id:
  *          type: integer
  */
 
 /**
  *  @swagger
- *  /personals/{id}:
+ *  /alunos/{id}:
  *  get:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Buscar Personal pelo ID
- *    summary: Buscar Personal pelo ID
+ *      - Alunos
+ *    name: Buscar Aluno pelo ID
+ *    summary: Buscar Aluno pelo ID
  *    produces:
  *     - application/json
  *    consumes:
@@ -36,41 +49,41 @@
  *    parameters:
  *     - name: id
  *       in: path
- *       description: ID do personal a ser retornado
+ *       description: ID do aluno a ser retornado
  *       required: true
  *       type: integer
  *    responses:
  *     200:
- *       description: Personal retornado com sucesso
+ *       description: Aluno retornado com sucesso
  *       schema:
- *        $ref: '#/definitions/personal'
+ *        $ref: '#/definitions/aluno'
  *     401:
  *       description: Usuário não autorizado
  *     404:
- *       description: Personal não encontrado
+ *       description: Aluno não encontrado
  *     500:
  *       description: Erro interno na API
  */
 
 /**
  *  @swagger
- *  /personals:
+ *  /alunos:
  *  get:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Listagem de Personals
- *    summary: Listagem de Personals
+ *      - Alunos
+ *    name: Listagem de Alunos
+ *    summary: Listagem de Alunos
  *    produces:
  *     - application/json
  *    consumes:
  *     - application/json
  *    responses:
  *     200:
- *       description: Personals retornados com sucesso
+ *       description: Alunos retornados com sucesso
  *       schema:
- *        $ref: '#/definitions/personal'
+ *        $ref: '#/definitions/aluno'
  *     401:
  *       description: Usuário não autorizado
  *     500:
@@ -79,14 +92,14 @@
 
 /**
  *  @swagger
- *  /personals:
+ *  /alunos:
  *  post:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Cadastrar Personal
- *    summary: Cadastrar Personal
+ *      - Alunos
+ *    name: Cadastrar Aluno
+ *    summary: Cadastrar Aluno
  *    produces:
  *     - application/json
  *    consumes:
@@ -97,6 +110,7 @@
  *       properties:
  *         nome:
  *           type: string
+ *           description: Teste de descrição
  *         cpf:
  *           type: string
  *         email:
@@ -106,17 +120,42 @@
  *           type: string
  *         telefone:
  *           type: string
+ *         dataNascimento:
+ *           type: string
+ *           format: date
+ *         altura:
+ *           type: number
+ *           format: double
+ *         restricao:
+ *           type: string
+ *         observacao:
+ *           type: string
+ *         peso:
+ *           type: number
+ *           format: double
+ *         dataInicio:
+ *           type: string
+ *           format: date
+ *         dataFim:
+ *           type: string
+ *           format: date
+ *         usuario_id:
+ *           type: integer
  *         required:
  *           - nome
  *           - cpf
  *           - email
  *           - senha
  *           - telefone
+ *           - dataNascimento
+ *           - altura
+ *           - peso
+ *           - usuario_id
  *    responses:
  *     201:
- *       description: Personal cadastrado com sucesso
+ *       description: Aluno cadastrado com sucesso
  *       schema:
- *        $ref: '#/definitions/personal'
+ *        $ref: '#/definitions/aluno'
  *     401:
  *       description: Usuário não autorizado
  *     500:
@@ -125,14 +164,14 @@
 
 /**
  *  @swagger
- *  /personals/{id}:
+ *  /alunos/{id}:
  *  put:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Atualizar Personal
- *    summary: Atualizar Personal
+ *      - Alunos
+ *    name: Atualizar Aluno
+ *    summary: Atualizar Aluno
  *    produces:
  *     - application/json
  *    consumes:
@@ -140,7 +179,7 @@
  *    parameters:
  *     - name: id
  *       in: path
- *       description: ID do personal a ser atualizado
+ *       description: ID do aluno a ser atualizado
  *       required: true
  *       type: integer
  *     - name: id
@@ -148,6 +187,7 @@
  *       properties:
  *         nome:
  *           type: string
+ *           description: Teste de descrição
  *         cpf:
  *           type: string
  *         email:
@@ -155,16 +195,41 @@
  *           format: email
  *         telefone:
  *           type: string
+ *         dataNascimento:
+ *           type: string
+ *           format: date
+ *         altura:
+ *           type: number
+ *           format: double
+ *         restricao:
+ *           type: string
+ *         observacao:
+ *           type: string
+ *         peso:
+ *           type: number
+ *           format: double
+ *         dataInicio:
+ *           type: string
+ *           format: date
+ *         dataFim:
+ *           type: string
+ *           format: date
+ *         usuario_id:
+ *           type: integer
  *         required:
  *           - nome
  *           - cpf
  *           - email
  *           - telefone
+ *           - dataNascimento
+ *           - altura
+ *           - peso
+ *           - usuario_id
  *    responses:
  *     200:
- *       description: Personal atualizado com sucesso
+ *       description: Aluno atualizado com sucesso
  *       schema:
- *        $ref: '#/definitions/personal'
+ *        $ref: '#/definitions/aluno'
  *     401:
  *       description: Usuário não autorizado
  *     500:

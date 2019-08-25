@@ -10,6 +10,7 @@
  *          type: string
  *        email:
  *          type: string
+ *          format: email
  *        cpf:
  *          type: string
  *        token:
@@ -34,6 +35,7 @@
  *       properties:
  *         email:
  *           type: string
+ *           format: email
  *         senha:
  *           type: string
  *         required:
