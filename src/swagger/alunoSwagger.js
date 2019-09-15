@@ -235,3 +235,28 @@
  *     500:
  *       description: Erro interno na API
  */
+
+/**
+ *  @swagger
+ *  /alunos/{id}/fichaHoje:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - Alunos
+ *    name: Busca uma ficha de hoje do aluno
+ *    summary: Busca uma ficha de hoje do aluno
+ *    produces:
+ *     - application/json
+ *    consumes:
+ *     - application/json
+ *    responses:
+ *     200:
+ *       description: Alunos retornados com sucesso
+ *       schema:
+ *        $ref: '#/definitions/aluno'
+ *     401:
+ *       description: Usuário não autorizado
+ *     500:
+ *       description: Erro interno na API
+ */

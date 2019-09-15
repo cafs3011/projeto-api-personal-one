@@ -1,9 +1,6 @@
 const Exercicio = require("../models/exercicioModel");
 const status = require("http-status");
-/*const express = require('express');
-const app = express(express);*/
-const cloudinary =require('../config/cloudinary');
-
+const cloudinary = require("../config/cloudinary");
 
 exports.buscarUm = (request, response, next) => {
   const id = request.params.id;
@@ -16,8 +13,6 @@ exports.buscarUm = (request, response, next) => {
         response.status(status.NOT_FOUND).send();
       }
     })
-
-    //
     .catch(error => next(error));
 };
 
@@ -42,52 +37,50 @@ exports.buscarTodos = (request, response, next) => {
 };
 
 exports.criar = async (request, response, next) => {
-    const nome = request.body.nome;
-    const descricao = request.body.descricao;
-    
-    
-    Exercicio.create({
-      nome: nome,
-      descricao: descricao
-    })
-      .then(exercicio => {
-        response.status(status.CREATED).send(exercicio);
-      })
-      .catch(error => next(error));
-  };
+  const nome = request.body.nome;
+  const descricao = request.body.descricao;
 
-  exports.postarImagem = (req,res,next) => {
-    const id = req.params.id;
-    console.log(id);
-    Exercicio.findByPk(id)
-    .then(exercicio =>{
-
-      const file = req.files.photo;
-      if(file == null) throw 'Argumento photo não encontrado';
-      else{
-      
-          cloudinary.uploadFile(file)
-          .then(resultUpload => {
-          if(resultUpload) {
-            Exercicio.update({
-              enderecoImagem: resultUpload.secure_url,
-              publicIdImagem: resultUpload.public_id
-            },{ where: { id: id } })
-            .then(exercicioAtualizado => {
-              res.status(status.OK).send(resultUpload);
-            })
-            .catch(error => next(error));
-          }
-          else
-           res.status(status.INTERNAL_SERVER_ERROR).send({mensagem: 'Arquivo não enviado ao Cloudinary'});
-          });
-      }
-
-
+  Exercicio.create({
+    nome: nome,
+    descricao: descricao
+  })
+    .then(exercicio => {
+      response.status(status.CREATED).send(exercicio);
     })
     .catch(error => next(error));
-  };
-  /*
+};
+
+exports.postarImagem = (req, res, next) => {
+  const id = req.params.id;
+  console.log(id);
+  Exercicio.findByPk(id)
+    .then(exercicio => {
+      const file = req.files.photo;
+      if (file == null) throw "Argumento photo não encontrado";
+      else {
+        cloudinary.uploadFile(file).then(resultUpload => {
+          if (resultUpload) {
+            Exercicio.update(
+              {
+                enderecoImagem: resultUpload.secure_url,
+                publicIdImagem: resultUpload.public_id
+              },
+              { where: { id: id } }
+            )
+              .then(exercicioAtualizado => {
+                res.status(status.OK).send(resultUpload);
+              })
+              .catch(error => next(error));
+          } else
+            res
+              .status(status.INTERNAL_SERVER_ERROR)
+              .send({ mensagem: "Arquivo não enviado ao Cloudinary" });
+        });
+      }
+    })
+    .catch(error => next(error));
+};
+/*
     const id = request.params.id;
     
     Exercicio.findByPk(id)
@@ -120,7 +113,7 @@ exports.criar = async (request, response, next) => {
               console.log("** File Upload (Promise)");
               if (err) { console.warn(err); }
             });*/
-            /*
+/*
             const promises = values.map(image => cloudinary.uploader.upload(image.path))
  
             Promise
@@ -159,49 +152,49 @@ exports.criar = async (request, response, next) => {
     .catch(error => next(error));
   };*/
 
-  exports.atualizar = (request, response, next) => {
-    const id = request.params.id;
-  
-    const nome = request.body.nome;
-    const descricao = request.body.descricao;
-  
-    Exercicio.findByPk(id)
-      .then(exercicio => {
-        if (exercicio) {
-            Exercicio.update(
-            {
-              nome: nome,
-              descricao: descricao
-            },
-            { where: { id: id } }
-          )
-            .then(exercicioAtualizado => {
-              response.status(status.OK).send(exercicioAtualizado);
-            })
-            .catch(error => next(error));
-        } else {
-          response.status(status.NOT_FOUND).send();
-        }
-      })
-      .catch(error => next(error));
-  };
+exports.atualizar = (request, response, next) => {
+  const id = request.params.id;
 
-  exports.excluir = (request, response, next) => {
-    const id = request.params.id;
-  
-    Exercicio.findByPk(id)
-      .then(exercicio => {
-        if (exercicio) {
-          Exercicio.destroy({
-            where: { id: id }
+  const nome = request.body.nome;
+  const descricao = request.body.descricao;
+
+  Exercicio.findByPk(id)
+    .then(exercicio => {
+      if (exercicio) {
+        Exercicio.update(
+          {
+            nome: nome,
+            descricao: descricao
+          },
+          { where: { id: id } }
+        )
+          .then(exercicioAtualizado => {
+            response.status(status.OK).send(exercicioAtualizado);
           })
-            .then(() => {
-              response.status(status.OK).send();
-            })
-            .catch(error => next(error));
-        } else {
-          response.status(status.NOT_FOUND).send();
-        }
-      })
-      .catch(error => next(error));
-  };
+          .catch(error => next(error));
+      } else {
+        response.status(status.NOT_FOUND).send();
+      }
+    })
+    .catch(error => next(error));
+};
+
+exports.excluir = (request, response, next) => {
+  const id = request.params.id;
+
+  Exercicio.findByPk(id)
+    .then(exercicio => {
+      if (exercicio) {
+        Exercicio.destroy({
+          where: { id: id }
+        })
+          .then(() => {
+            response.status(status.OK).send();
+          })
+          .catch(error => next(error));
+      } else {
+        response.status(status.NOT_FOUND).send();
+      }
+    })
+    .catch(error => next(error));
+};

@@ -23,8 +23,8 @@
  *  post:
  *    tags:
  *      - Usuarios
- *    name: Cadastrar Usuário
- *    summary: Cadastramento de Usuários
+ *    name: Autorização Usuário
+ *    summary: Autorização de Usuários
  *    produces:
  *     - application/json
  *    consumes:

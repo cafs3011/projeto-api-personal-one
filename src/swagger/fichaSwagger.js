@@ -1,34 +1,63 @@
 /**
  *  @swagger
  *  definitions:
- *    personal:
+ *    fichaTreinamento:
  *      type: object
  *      properties:
  *        id:
  *          type: integer
  *        nome:
  *          type: string
- *        cpf:
+ *        descricao:
  *          type: string
- *        email:
+ *        descansoPadrao:
  *          type: string
- *          format: email
- *        telefone:
+ *        orientacao:
  *          type: string
- *        usuario_id:
- *          type: integer
+ *        ficha:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: integer
+ *            nome:
+ *              type: string
+ *            descricao:
+ *              type: string
+ *            descansoPadrao:
+ *              type: string
+ *            orientacao:
+ *              type: string
+ *            exercicioFicha:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                carga:
+ *                  type: number
+ *                repeticao:
+ *                  type: number
+ *                intervalo:
+ *                  type: string
+ *                customizado:
+ *                  type: string
+ *                codigoSerie:
+ *                  type: string
+ *                ficha_id:
+ *                  type: integer
+ *                exercicio_id:
+ *                  type: integer
  */
 
 /**
  *  @swagger
- *  /personals/{id}:
+ *  /fichas/{id}:
  *  get:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Buscar Personal pelo ID
- *    summary: Buscar Personal pelo ID
+ *      - Fichas
+ *    name: Buscar Ficha pelo ID
+ *    summary: Buscar Ficha pelo ID
  *    produces:
  *     - application/json
  *    consumes:
@@ -36,41 +65,41 @@
  *    parameters:
  *     - name: id
  *       in: path
- *       description: ID do personal a ser retornado
+ *       description: ID do ficha a ser retornado
  *       required: true
  *       type: integer
  *    responses:
  *     200:
- *       description: Personal retornado com sucesso
+ *       description: Ficha retornado com sucesso
  *       schema:
- *        $ref: '#/definitions/personal'
+ *        $ref: '#/definitions/ficha'
  *     401:
  *       description: Usuário não autorizado
  *     404:
- *       description: Personal não encontrado
+ *       description: Ficha não encontrado
  *     500:
  *       description: Erro interno na API
  */
 
 /**
  *  @swagger
- *  /personals:
+ *  /fichas:
  *  get:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Listagem de Personals
- *    summary: Listagem de Personals
+ *      - Fichas
+ *    name: Listagem de Ficha
+ *    summary: Listagem de Ficha
  *    produces:
  *     - application/json
  *    consumes:
  *     - application/json
  *    responses:
  *     200:
- *       description: Personals retornados com sucesso
+ *       description: Fichas retornados com sucesso
  *       schema:
- *        $ref: '#/definitions/personal'
+ *        $ref: '#/definitions/ficha'
  *     401:
  *       description: Usuário não autorizado
  *     500:
@@ -79,14 +108,14 @@
 
 /**
  *  @swagger
- *  /personals:
+ *  /fichas:
  *  post:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Cadastrar Personal
- *    summary: Cadastrar Personal
+ *      - Fichas
+ *    name: Cadastrar Ficha
+ *    summary: Cadastrar Ficha
  *    produces:
  *     - application/json
  *    consumes:
@@ -97,26 +126,17 @@
  *       properties:
  *         nome:
  *           type: string
- *         cpf:
- *           type: string
- *         email:
- *           type: string
- *           format: email
- *         senha:
- *           type: string
- *         telefone:
+ *           description: Teste de descrição
+ *         descricao:
  *           type: string
  *         required:
  *           - nome
- *           - cpf
- *           - email
- *           - senha
- *           - telefone
+ *           - descricao
  *    responses:
  *     201:
- *       description: Personal cadastrado com sucesso
+ *       description: Ficha cadastrado com sucesso
  *       schema:
- *        $ref: '#/definitions/personal'
+ *        $ref: '#/definitions/ficha'
  *     401:
  *       description: Usuário não autorizado
  *     500:
@@ -125,14 +145,14 @@
 
 /**
  *  @swagger
- *  /personals/{id}:
+ *  /fichas/{id}:
  *  put:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Atualizar Personal
- *    summary: Atualizar Personal
+ *      - Fichas
+ *    name: Atualizar Ficha
+ *    summary: Atualizar Ficha
  *    produces:
  *     - application/json
  *    consumes:
@@ -140,46 +160,41 @@
  *    parameters:
  *     - name: id
  *       in: path
- *       description: ID do personal a ser atualizado
+ *       description: ID do ficha a ser atualizado
  *       required: true
  *       type: integer
- *     - name: id
+ *     - name: body
  *       in: body
  *       properties:
  *         nome:
  *           type: string
- *         cpf:
- *           type: string
- *         email:
- *           type: string
- *           format: email
- *         telefone:
+ *           description: Teste de descrição
+ *         descricao:
  *           type: string
  *         required:
  *           - nome
- *           - cpf
- *           - email
- *           - telefone
+ *           - descricao
  *    responses:
  *     200:
- *       description: Personal atualizado com sucesso
+ *       description: Ficha atualizado com sucesso
  *       schema:
- *        $ref: '#/definitions/personal'
+ *        $ref: '#/definitions/ficha'
  *     401:
  *       description: Usuário não autorizado
  *     500:
  *       description: Erro interno na API
  */
+
 /**
  *  @swagger
- *  /personal/{id}/history:
- *  get:
+ *  /fichas/{id}:
+ *  delete:
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Personals
- *    name: Buscar histórico de acompanhamento dos alunos
- *    summary: Buscar histórico de acompanhamento dos alunos
+ *      - Fichas
+ *    name: Deletar Ficha pelo ID
+ *    summary: Deletar Ficha pelo ID
  *    produces:
  *     - application/json
  *    consumes:
