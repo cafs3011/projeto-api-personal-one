@@ -5,14 +5,11 @@ const fichaTreinamentoRepository = require("../repository/fichaTreinamentoReposi
 exports.buscarUm = async (request, response, next) => {
   const id = request.params.id;
 
-  await fichaTreinamentoRepository.buscarUm(id, "fichaTreinamentoModel")
+  await fichaTreinamentoRepository
+    .buscarUm(id, "fichaTreinamentoModel")
     .then(entidade => {
-      
-      if (entidade)
-        response.status(status.OK).send(entidade);
-      else
-        response.status(status.NOT_FOUND).send();
-      
+      if (entidade) response.status(status.OK).send(entidade);
+      else response.status(status.NOT_FOUND).send();
     })
     .catch(error => next(error));
 };
@@ -30,33 +27,36 @@ exports.buscarTodos = async (request, response, next) => {
   limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite;
   pagina = pagina <= 0 ? 0 : pagina * limite;
 
-  await fichaTreinamentoRepository.buscarTodos(limite,pagina,"fichaTreinamentoModel")
-        .then(entidades => {
-          if(entidades)
-            response.status(status.OK).send(entidades);    
-          else
-            response.status(status.NOT_FOUND).send();
-  })};
+  await fichaTreinamentoRepository
+    .buscarTodos(limite, pagina, "fichaTreinamentoModel")
+    .then(entidades => {
+      if (entidades) response.status(status.OK).send(entidades);
+      else response.status(status.NOT_FOUND).send();
+    });
+};
 
-  exports.criar = async (request, response, next) => {
-    console.log(request.body);
-    await fichaTreinamentoRepository.criar(request.body,"fichaTreinamentoModel")
-    .then(entidade => {
-      response.status(status.CREATED).send(entidade);
-    }).catch(error => next(error));
+exports.criar = async (request, response, next) => {
+  var entidade = await fichaTreinamentoRepository
+    .criar(request.body, "fichaTreinamentoModel")
+    .catch(error => next(error));
+
+  if (entidade) {
+    var entidadeRetorno = await fichaTreinamentoRepository.buscarUm(
+      entidade.id,
+      "fichaTreinamentoModel"
+    );
+    response.status(status.CREATED).send(entidadeRetorno);
+  }
 };
 
 exports.atualizar = async (request, response, next) => {
   const id = request.params.id;
 
-
-  await fichaTreinamentoRepository.atualizar(id,request.body,'fichaTreinamentoModel')
+  await fichaTreinamentoRepository
+    .atualizar(id, request.body, "fichaTreinamentoModel")
     .then(entidade => {
-      if (entidade) 
-      response.status(status.OK).send(entidade);  
-      else 
-        response.status(status.NOT_FOUND).send();
-      
+      if (entidade) response.status(status.OK).send(entidade);
+      else response.status(status.NOT_FOUND).send();
     })
     .catch(error => next(error));
 };
@@ -64,12 +64,11 @@ exports.atualizar = async (request, response, next) => {
 exports.excluir = async (request, response, next) => {
   const id = request.params.id;
 
-  await fichaTreinamentoRepository.excluir(id,"fichaTreinamentoModel")
-      .then(entidade => {
-        if(entidade)
-          response.status(status.OK).send();
-        else
-          response.status(status.NOT_FOUND).send();
-      })
-      .catch(error => next(error));
-  };
+  await fichaTreinamentoRepository
+    .excluir(id, "fichaTreinamentoModel")
+    .then(entidade => {
+      if (entidade) response.status(status.OK).send();
+      else response.status(status.NOT_FOUND).send();
+    })
+    .catch(error => next(error));
+};

@@ -1,12 +1,11 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/database");
 const Model = Sequelize.Model;
-const Personal = require("./personalModel");
-const Aluno = require("./alunoModel");
 const Ficha = require("./fichaModel");
+const Exercicio = require("./exercicioModel");
 
-class FichaTreinamento extends Model {}
-module.exports = FichaTreinamento.init(
+class ExercicioFicha extends Model {}
+module.exports = ExercicioFicha.init(
   {
     id: {
       allowNull: false,
@@ -14,33 +13,15 @@ module.exports = FichaTreinamento.init(
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    dataInicio: {
+    carga: {
       allowNull: false,
       require: true,
-      type: Sequelize.DATEONLY,
+      type: Sequelize.DECIMAL(5, 1),
       validate: {
-        isDate: true
+        isDecimal: true
       }
     },
-    dataFim: {
-      allowNull: false,
-      require: true,
-      type: Sequelize.DATEONLY,
-      validate: {
-        isDate: true
-      }
-    },
-    configuracaoTreino: {
-      allowNull: false,
-      require: true,
-      type: Sequelize.TEXT
-    },
-    objetivo: {
-      allowNull: false,
-      require: true,
-      type: Sequelize.TEXT
-    },
-    tempoEstimado: {
+    repeticao: {
       allowNull: false,
       require: true,
       type: Sequelize.INTEGER,
@@ -48,25 +29,46 @@ module.exports = FichaTreinamento.init(
         len: [1, 3]
       }
     },
-    diasTreino: {
+    tempo: {
+      allowNull: false,
+      require: true,
+      type: Sequelize.INTEGER,
+      validate: {
+        len: [1, 3]
+      }
+    },
+    codigoSerie: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+      validate: {
+        len: [1, 3]
+      }
+    },
+    intervalo: {
+      allowNull: false,
+      require: true,
+      type: Sequelize.INTEGER,
+      validate: {
+        len: [1, 3]
+      }
+    },
+    customizado: {
       allowNull: false,
       type: Sequelize.TEXT
     }
   },
   {
     sequelize,
-    modelName: "fichaTreinamento",
+    modelName: "exercicioFicha",
     freezeTableName: true
   }
 );
 
-FichaTreinamento.belongsTo(Personal, {
-  foreignKey: "personal_id",
+ExercicioFicha.belongsTo(Ficha, {
+  foreignKey: "ficha_id",
   targetKey: "id"
 });
-
-FichaTreinamento.belongsTo(Aluno, { foreignKey: "aluno_id", targetKey: "id" });
-
-FichaTreinamento.associate = function(models) {
-  FichaTreinamento.hasMany(models.Ficha);
-};
+ExercicioFicha.belongsTo(Exercicio, {
+  foreignKey: "exercicio_id",
+  targetKey: "id"
+});

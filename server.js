@@ -21,9 +21,9 @@ const personalRoute = require("./src/routes/personalRoute");
 const assinaturaRoute = require("./src/routes/assinaturaRoute");
 const fichaTreinamentoRoute = require("./src/routes/fichaTreinamentoRoute");
 
+app.use("/api", personalRoute);
 app.use("/api", usuariosRoute);
 app.use("/api", alunosRoute);
-app.use("/api", personalRoute);
 app.use("/api", exerciciosRoute);
 app.use("/api", fichasRoute);
 app.use("/api", assinaturaRoute);
@@ -39,14 +39,15 @@ app.use((error, request, response, next) => {
 });
 
 var order = [
-  "exercicioModel.js",
   "usuarioModel.js",
-  "fichaModel.js",
   "alunoModel.js",
-  "aquecimentoModel.js",
   "personalModel.js",
   "assinaturaModel.js",
-  "fichaTreinamentoModel.js"
+  "exercicioModel.js",
+  "fichaTreinamentoModel.js",
+  "fichaModel.js",
+  "exercicioFichaModel.js",
+  "aquecimentoModel.js"
 ];
 
 order.forEach(entidade => {

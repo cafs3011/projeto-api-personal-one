@@ -18,6 +18,5 @@ exports.buscarTodos = async (limite,pagina) => {
       entidades[i].createdAt = undefined;
       entidades[i].updatedAt = undefined;
     }
-    console.log(entidades);
     return entidades;
 };
